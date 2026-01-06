@@ -1,7 +1,6 @@
 package com.example.happyghastcontrol.mixin;
 
 import com.example.happyghastcontrol.HappyGhastControlClient;
-import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.mob.GhastEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -13,47 +12,30 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(GhastEntity.class)
 public abstract class LivingEntityMixin {
 
-    @Inject(method = "getRiddenInput", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getRiddenInput", at = @At("HEAD"), cancellable = true)
     private void modifyHappyGhastRiddenInput(PlayerEntity player, Vec3d originalInput, CallbackInfoReturnable<Vec3d> cir) {
         GhastEntity ghast = (GhastEntity)(Object)this;
         
         // Only modify behavior for happy ghasts (no target)
         if (ghast.getTarget() == null) {
-            // Get original input values
-            double originalX = originalInput.x;
-            double originalY = originalInput.y;
-            double originalZ = originalInput.z;
+            // Get player movement inputs
+            float forward = player.movementForward;
+            float sideways = player.movementSideways;
             
-            // Calculate horizontal movement from player input
-            float forward = player.input.movementForward;
-            float sideways = player.input.movementSideways;
-            
-            // Handle vertical movement from custom key bindings
-            double vertical = 0.0;
+            // Handle vertical movement
+            float vertical = 0.0f;
             if (HappyGhastControlClient.ascendKey.isPressed()) {
-                vertical += 0.4;
+                vertical += 0.5f;
             }
             if (HappyGhastControlClient.descendKey.isPressed()) {
-                vertical -= 0.4;
+                vertical -= 0.5f;
             }
             
-            // Get player's yaw for direction
-            float yaw = player.getYaw();
-            double yawRad = Math.toRadians(yaw);
-            
-            // Calculate forward and sideways direction vectors
-            double forwardX = -Math.sin(yawRad);
-            double forwardZ = Math.cos(yawRad);
-            double sideX = -forwardZ;
-            double sideZ = forwardX;
-            
-            // Calculate final movement vector
-            double moveX = (forwardX * forward + sideX * sideways) * 0.4;
-            double moveY = vertical;
-            double moveZ = (forwardZ * forward + sideZ * sideways) * 0.4;
-            
             // Create movement vector
-            Vec3d movement = new Vec3d(moveX, moveY, moveZ);
+            Vec3d movement = new Vec3d(sideways, vertical, forward);
+            
+            // Apply movement scaling (matches reference MOD behavior)
+            movement = movement.multiply(0.18);
             
             // Set the return value
             cir.setReturnValue(movement);

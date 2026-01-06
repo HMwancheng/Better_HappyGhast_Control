@@ -9,7 +9,7 @@
     "sources": "https://github.com/yourusername/happyghastcontrol"
   },
   "license": "MIT",
-  "icon": "assets/happyghastcontrol/icon.png",
+
   "environment": "client",
   "entrypoints": {
     "client": [
