@@ -39,49 +39,38 @@ public abstract class LivingEntityMixin {
                             float forward = 0.0F;
                             float sideways = 0.0F;
                             
-                            // Get key bindings from client options
-                            KeyBinding forwardKey = client.options.forwardKey;
-                            KeyBinding backwardKey = client.options.backKey;
-                            KeyBinding leftKey = client.options.leftKey;
-                            KeyBinding rightKey = client.options.rightKey;
+                            // Calculate movement input from player controls
+                            forward = player.input.movementForward;
+                            sideways = player.input.movementSideways;
                             
-                            // Calculate horizontal movement input
-                            if (forwardKey.isPressed()) {
-                                forward += 1.0F;
-                            }
-                            if (backwardKey.isPressed()) {
-                                forward -= 1.0F;
-                            }
-                            if (leftKey.isPressed()) {
-                                sideways += 1.0F;
-                            }
-                            if (rightKey.isPressed()) {
-                                sideways -= 1.0F;
-                            }
-                            
-                            // Handle vertical movement
+                            // Handle vertical movement from custom key bindings
                             double vertical = 0.0;
                             if (HappyGhastControlClient.ascendKey.isPressed()) {
-                                vertical += 1.0;
+                                vertical += 0.4;
                             }
                             if (HappyGhastControlClient.descendKey.isPressed()) {
-                                vertical -= 1.0;
+                                vertical -= 0.4;
                             }
                             
-                            // Apply movement
-                            Vec3d playerRotation = player.getRotationVector();
-                            Vec3d horizontalDirection = new Vec3d(playerRotation.x, 0.0, playerRotation.z).normalize();
-                            Vec3d sideDirection = new Vec3d(-horizontalDirection.z, 0.0, horizontalDirection.x).normalize();
+                            // Get player rotation for direction
+                            float yaw = player.getYaw();
+                            float pitch = player.getPitch();
                             
-                            Vec3d movement = new Vec3d(
-                                    horizontalDirection.x * forward + sideDirection.x * sideways,
-                                    vertical,
-                                    horizontalDirection.z * forward + sideDirection.z * sideways
-                            ).normalize();
+                            // Calculate forward direction based on yaw
+                            float yawRad = (float) Math.toRadians(yaw);
+                            double forwardX = -Math.sin(yawRad) * Math.cos(Math.toRadians(pitch));
+                            double forwardZ = Math.cos(yawRad) * Math.cos(Math.toRadians(pitch));
                             
-                            // Apply movement speed (keep original speed)
-                            double speed = 0.4; // Original ghast movement speed
-                            movement = movement.multiply(speed);
+                            // Calculate sideways direction (perpendicular to forward)
+                            double sideX = -forwardZ;
+                            double sideZ = forwardX;
+                            
+                            // Create movement vector
+                            double moveX = (forwardX * forward + sideX * sideways) * 0.4;
+                            double moveY = vertical;
+                            double moveZ = (forwardZ * forward + sideZ * sideways) * 0.4;
+                            
+                            Vec3d movement = new Vec3d(moveX, moveY, moveZ);
                             
                             // Update entity velocity
                             entity.setVelocity(movement);
