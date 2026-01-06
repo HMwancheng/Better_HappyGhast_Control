@@ -10,13 +10,6 @@ base {
     archivesName = project.archives_base_name
 }
 
-pluginManagement {
-    repositories {
-        maven { url = 'https://maven.fabricmc.net/' }
-        gradlePluginPortal()
-    }
-}
-
 repositories {
     maven { url = 'https://maven.fabricmc.net/' }
 }
