@@ -25,8 +25,8 @@ public abstract class HappyGhastMixin {
                 speedMultiplier = 1.2;
             }
             
-            float forward = player.input.forward;
-            float strafe = player.input.sideways;
+            float forward = 0.0f;
+            float strafe = 0.0f;
             float vertical = 0.0f;
             
             if (player instanceof IPlayerInjector injector && injector.betterHappyGhast$isCtrlDown()) {

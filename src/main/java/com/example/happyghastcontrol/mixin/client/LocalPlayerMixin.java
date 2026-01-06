@@ -16,7 +16,7 @@ public class LocalPlayerMixin implements IPlayerInjector {
     @Inject(method = "tick", at = @At("HEAD"))
     private void betterHappyGhast$trackCtrlKey(boolean slowDown, float slowDownFactor, CallbackInfo ci) {
         KeyboardInput input = (KeyboardInput)(Object)this;
-        boolean currentCtrlDown = input.sneaking;
+        boolean currentCtrlDown = input.pressingSneak;
         
         if (currentCtrlDown != betterHappyGhast$ctrlDown) {
             betterHappyGhast$ctrlDown = currentCtrlDown;
