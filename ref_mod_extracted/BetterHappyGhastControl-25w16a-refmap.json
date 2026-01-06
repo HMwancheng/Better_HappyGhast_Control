@@ -1,0 +1,14 @@
+{
+  "mappings": {
+    "dev/dubhe/bhgc/mixin/HappyGhastMixin": {
+      "getRiddenInput": "Lnet/minecraft/class_11187;method_49482(Lnet/minecraft/class_1657;Lnet/minecraft/class_243;)Lnet/minecraft/class_243;"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "dev/dubhe/bhgc/mixin/HappyGhastMixin": {
+        "getRiddenInput": "Lnet/minecraft/class_11187;method_49482(Lnet/minecraft/class_1657;Lnet/minecraft/class_243;)Lnet/minecraft/class_243;"
+      }
+    }
+  }
+}

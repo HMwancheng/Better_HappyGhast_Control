@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "bhgc",
+  "version": "0.0.1",
+  "name": "BetterHappyGhastControl",
+  "description": "Better Happy Ghast Control",
+  "authors": [
+    "Gugle"
+  ],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "pack.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+    ],
+    "client": [
+      "dev.dubhe.bhgc.client.BetterHappyGhastControlClient"
+    ],
+    "main": [
+      "dev.dubhe.bhgc.BetterHappyGhastControl"
+    ]
+  },
+  "mixins": [
+    "bhgc.mixins.json",
+    {
+      "config": "bhgc.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": ">=1.21.6-alpha.25.16.a"
+  }
+}

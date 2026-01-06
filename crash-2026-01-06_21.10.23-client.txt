@@ -1,7 +1,7 @@
 ---- Minecraft Crash Report ----
-// You're mean.
+// Hey, that tickles! Hehehe!
 
-Time: 2026-01-06 21:10:23
+Time: 2026-01-06 22:09:46
 Description: Bootstrap
 
 java.lang.BootstrapMethodError: java.lang.RuntimeException: Mixin transformation of net.minecraft.class_1571 failed
@@ -52,7 +52,7 @@ Caused by: org.spongepowered.asm.mixin.throwables.MixinApplyError: Mixin [happyg
 	at org.spongepowered.asm.mixin.transformer.MixinProcessor.handleMixinApplyError(MixinProcessor.java:637)
 	at org.spongepowered.asm.mixin.transformer.MixinProcessor.applyMixins(MixinProcessor.java:368)
 	... 36 more
-Caused by: org.spongepowered.asm.mixin.injection.throwables.InvalidInjectionException: Critical injection failure: @Inject annotation on modifyHappyGhastRiddenInput could not find any targets matching 'getRiddenInput' in net/minecraft/class_1571. Using refmap happyghastcontrol-refmap.json [INJECT_PREPARE Applicator Phase -> happyghastcontrol.mixins.json:LivingEntityMixin from mod happyghastcontrol -> Prepare Injections -> handler$dmg000$happyghastcontrol$modifyHappyGhastRiddenInput(Lnet/minecraft/class_1657;Lnet/minecraft/class_243;Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfoReturnable;)V -> Parse ->  -> Validate Targets]
+Caused by: org.spongepowered.asm.mixin.injection.throwables.InvalidInjectionException: Critical injection failure: @Inject annotation on modifyHappyGhastRiddenInput could not find any targets matching 'getPassengerInput' in net/minecraft/class_1571. Using refmap happyghastcontrol-refmap.json [INJECT_PREPARE Applicator Phase -> happyghastcontrol.mixins.json:LivingEntityMixin from mod happyghastcontrol -> Prepare Injections -> handler$dmg000$happyghastcontrol$modifyHappyGhastRiddenInput(Lorg/spongepowered/asm/mixin/injection/callback/CallbackInfoReturnable;)V -> Parse ->  -> Validate Targets]
 	at org.spongepowered.asm.mixin.injection.selectors.TargetSelectors.validate(TargetSelectors.java:346)
 	at org.spongepowered.asm.mixin.injection.struct.InjectionInfo.readAnnotation(InjectionInfo.java:369)
 	at org.spongepowered.asm.mixin.injection.struct.InjectionInfo.<init>(InjectionInfo.java:340)
@@ -129,7 +129,6 @@ Details:
 		WINMM.dll:MCI API DLL:10.0.26100.7689 (WinBuild.160101.0800):Microsoft Corporation
 		WS2_32.dll:Windows Socket 2.0 32 位 DLL:10.0.26100.7689 (WinBuild.160101.0800):Microsoft Corporation
 		amsi.dll:Anti-Malware Scan Interface:10.0.26100.7309 (WinBuild.160101.0800):Microsoft Corporation
-		apphelp.dll:应用程序兼容性客户端库:10.0.26100.7689 (WinBuild.160101.0800):Microsoft Corporation
 		bcrypt.dll:Windows 加密基元库:10.0.26100.7689 (WinBuild.160101.0800):Microsoft Corporation
 		bcryptPrimitives.dll:Windows Cryptographic Primitives Library:10.0.26100.7309 (WinBuild.160101.0800):Microsoft Corporation
 		clbcatq.dll:COM+ Configuration Catalog:2001.12.10941.16384 (WinBuild.160101.0800):Microsoft Corporation
@@ -143,7 +142,7 @@ Details:
 		jemalloc.dll
 		jimage.dll:Zulu Platform x64 Architecture:25.0.1:Azul Systems Inc.
 		jli.dll:Zulu Platform x64 Architecture:25.0.1:Azul Systems Inc.
-		jna13649987732170334182.dll:JNA native library:7.0.2:Java(TM) Native Access (JNA)
+		jna2791482033835452740.dll:JNA native library:7.0.2:Java(TM) Native Access (JNA)
 		jvm.dll:Zulu 64-Bit Server VM:25.0.1:Azul Systems Inc.
 		kernel.appcore.dll:AppModel API Host:10.0.26100.7309 (WinBuild.160101.0800):Microsoft Corporation
 		libjlw-x86_64-1.4.4.dll
@@ -194,7 +193,7 @@ Details:
 	Operating System: Windows 11 (amd64) version 10.0
 	Java Version: 25.0.1, Azul Systems, Inc.
 	Java VM Version: OpenJDK 64-Bit Server VM (mixed mode, sharing), Azul Systems, Inc.
-	Memory: 1095738576 bytes (1044 MiB) / 1526726656 bytes (1456 MiB) up to 10099884032 bytes (9632 MiB)
+	Memory: 943903216 bytes (900 MiB) / 1392508928 bytes (1328 MiB) up to 9235857408 bytes (8808 MiB)
 	CPUs: 20
 	Processor Vendor: GenuineIntel
 	Processor Name: 12th Gen Intel(R) Core(TM) i9-12900H
@@ -216,15 +215,15 @@ Details:
 	Memory slot #1 clockSpeed (GHz): 4.80
 	Memory slot #1 type: DDR5
 	Virtual memory max (MiB): 54064.49
-	Virtual memory used (MiB): 28988.39
+	Virtual memory used (MiB): 30760.07
 	Swap memory total (MiB): 21504.00
-	Swap memory used (MiB): 161.68
-	Space in storage for jna.tmpdir (MiB): available: 41974.70, total: 282330.00
-	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): available: 41974.70, total: 282330.00
-	Space in storage for io.netty.native.workdir (MiB): available: 41974.70, total: 282330.00
-	Space in storage for java.io.tmpdir (MiB): available: 49129.70, total: 203779.00
-	Space in storage for workdir (MiB): available: 41974.70, total: 282330.00
-	JVM Flags: 6 total; -XX:+UseG1GC -XX:-UseAdaptiveSizePolicy -XX:-OmitStackTraceInFastThrow -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -Xmn1443m -Xmx9625m
+	Swap memory used (MiB): 155.63
+	Space in storage for jna.tmpdir (MiB): available: 41367.10, total: 282330.00
+	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): available: 41367.10, total: 282330.00
+	Space in storage for io.netty.native.workdir (MiB): available: 41367.10, total: 282330.00
+	Space in storage for java.io.tmpdir (MiB): available: 48915.61, total: 203779.00
+	Space in storage for workdir (MiB): available: 41367.10, total: 282330.00
+	JVM Flags: 6 total; -XX:+UseG1GC -XX:-UseAdaptiveSizePolicy -XX:-OmitStackTraceInFastThrow -XX:HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_minecraft.exe.heapdump -Xmn1320m -Xmx8806m
 	Fabric Mods: 
 		advancements_reloaded: Advancements Reloaded 0.10.0
 		appleskin: AppleSkin 3.0.6+mc1.21.6

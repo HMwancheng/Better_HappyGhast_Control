@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.dubhe.bhgc.mixin.client",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "LocalPlayerMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "refmap": "client-BetterHappyGhastControl-25w16a-refmap.json"
+}

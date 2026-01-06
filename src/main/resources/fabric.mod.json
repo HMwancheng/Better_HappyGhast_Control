@@ -10,14 +10,21 @@
   },
   "license": "MIT",
 
-  "environment": "client",
+  "environment": "*",
   "entrypoints": {
     "client": [
       "com.example.happyghastcontrol.HappyGhastControlClient"
+    ],
+    "main": [
+      "com.example.happyghastcontrol.HappyGhastControl"
     ]
   },
   "mixins": [
-    "happyghastcontrol.mixins.json"
+    "happyghastcontrol.mixins.json",
+    {
+      "config": "happyghastcontrol.client.mixins.json",
+      "environment": "client"
+    }
   ],
   "depends": {
     "fabricloader": ">=0.15.10",

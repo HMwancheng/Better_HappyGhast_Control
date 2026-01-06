@@ -1,0 +1,16 @@
+{
+  "mappings": {
+    "dev/dubhe/bhgc/mixin/client/LocalPlayerMixin": {
+      "Lnet/minecraft/client/player/LocalPlayer;canStartSprinting()Z": "Lnet/minecraft/class_746;method_48300()Z",
+      "aiStep": "Lnet/minecraft/class_746;method_6007()V"
+    }
+  },
+  "data": {
+    "named:intermediary": {
+      "dev/dubhe/bhgc/mixin/client/LocalPlayerMixin": {
+        "Lnet/minecraft/client/player/LocalPlayer;canStartSprinting()Z": "Lnet/minecraft/class_746;method_48300()Z",
+        "aiStep": "Lnet/minecraft/class_746;method_6007()V"
+      }
+    }
+  }
+}

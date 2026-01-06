@@ -1,9 +1,9 @@
 {
   "required": true,
-  "package": "com.example.happyghastcontrol.mixin",
+  "package": "com.example.happyghastcontrol.mixin.client",
   "compatibilityLevel": "JAVA_21",
-  "mixins": [
-    "HappyGhastMixin"
+  "client": [
+    "LocalPlayerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

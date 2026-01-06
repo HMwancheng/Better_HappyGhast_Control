@@ -1,11 +1,13 @@
 {
   "required": true,
-  "package": "com.example.happyghastcontrol.mixin",
+  "minVersion": "0.8",
+  "package": "dev.dubhe.bhgc.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "HappyGhastMixin"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "refmap": "BetterHappyGhastControl-25w16a-refmap.json"
 }
