@@ -37,6 +37,10 @@ Key bindings can be customized in-game:
 
 ## Building from Source
 
+### Build Status
+
+[![Build Status](https://github.com/HMwancheng/Better_HappyGhast_Control/actions/workflows/build.yml/badge.svg)](https://github.com/HMwancheng/Better_HappyGhast_Control/actions/workflows/build.yml)
+
 ### Prerequisites
 
 - Java 21 or newer
