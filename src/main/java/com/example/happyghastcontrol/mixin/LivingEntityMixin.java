@@ -22,14 +22,14 @@ public abstract class LivingEntityMixin {
         LivingEntity entity = (LivingEntity)(Object)this;
         
         // Check if this entity is a ridden ghast
-        if (entity.getType() == EntityType.GHAST && entity.hasPassengers()) {
-            for (PlayerEntity passenger : entity.getPassengers().stream().filter(e -> e instanceof PlayerEntity).map(e -> (PlayerEntity)e).toList()) {
+        if (entity.getType() == EntityType.GHAST && !entity.getPassengerList().isEmpty()) {
+            for (PlayerEntity passenger : entity.getPassengerList().stream().filter(e -> e instanceof PlayerEntity).map(e -> (PlayerEntity)e).toList()) {
                 if (passenger instanceof ClientPlayerEntity) {
                     ClientPlayerEntity player = (ClientPlayerEntity)passenger;
                     
-                    // Check if it's a happy ghast (using the isHappy method)
+                    // Check if it's a happy ghast (using the anger level)
                     GhastEntity ghast = (GhastEntity)entity;
-                    if (ghast.isHappy()) {
+                    if (ghast.getAngerTime() <= 0) {
                         // Cancel vanilla travel logic for happy ghasts
                         ci.cancel();
                         
