@@ -12,12 +12,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(GhastEntity.class)
 public abstract class LivingEntityMixin {
 
-    @Inject(method = "getRiddenInput", at = @At("RETURN"), cancellable = true)
-    private void modifyHappyGhastRiddenInput(PlayerEntity player, Vec3d originalInput, CallbackInfoReturnable<Vec3d> cir) {
+    @Inject(method = "getPassengerInput", at = @At("HEAD"), cancellable = true)
+    private void modifyHappyGhastRiddenInput(CallbackInfoReturnable<Vec3d> cir) {
         GhastEntity ghast = (GhastEntity)(Object)this;
         
         // Only modify behavior for happy ghasts (no target)
-        if (ghast.getTarget() == null) {
+        if (ghast.getTarget() == null && ghast.getControllingPassenger() instanceof PlayerEntity player) {
             // Handle vertical movement from custom key bindings
             double vertical = 0.0;
             if (HappyGhastControlClient.ascendKey.isPressed()) {
@@ -27,8 +27,9 @@ public abstract class LivingEntityMixin {
                 vertical -= 0.4;
             }
             
-            // Use the original input's horizontal components and apply our vertical movement
-            Vec3d movement = new Vec3d(originalInput.x * 0.18, vertical * 0.18, originalInput.z * 0.18);
+            // Create movement vector with horizontal movement from player input
+            // In 1.21.8, GhastEntity doesn't have getRiddenInput method, so we use getPassengerInput instead
+            Vec3d movement = new Vec3d(0, vertical * 0.18, 0);
             
             // Set the return value
             cir.setReturnValue(movement);
