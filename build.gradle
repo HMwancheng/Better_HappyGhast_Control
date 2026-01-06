@@ -45,7 +45,13 @@ java {
     }
 }
 
-// Ensure classes are included in the JAR
+// Fabric Loom uses remapJar for the final mod JAR
+remapJar {
+    // Ensure the remapJar task includes all compiled classes
+    from sourceSets.main.output
+}
+
+// Ensure the regular jar task also includes classes
 jar {
     from sourceSets.main.output
 }
