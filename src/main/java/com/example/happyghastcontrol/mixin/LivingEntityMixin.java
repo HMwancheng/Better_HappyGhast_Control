@@ -12,17 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(GhastEntity.class)
 public abstract class LivingEntityMixin {
 
-    @Inject(method = "getRiddenInput(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getRiddenInput", at = @At("RETURN"), cancellable = true)
     private void modifyHappyGhastRiddenInput(PlayerEntity player, Vec3d originalInput, CallbackInfoReturnable<Vec3d> cir) {
         GhastEntity ghast = (GhastEntity)(Object)this;
         
         // Only modify behavior for happy ghasts (no target)
         if (ghast.getTarget() == null) {
-            // Get player movement inputs
-            float forward = player.input.movementForward;
-            float sideways = player.input.movementSideways;
-            
-            // Handle vertical movement
+            // Handle vertical movement from custom key bindings
             double vertical = 0.0;
             if (HappyGhastControlClient.ascendKey.isPressed()) {
                 vertical += 0.4;
@@ -31,22 +27,8 @@ public abstract class LivingEntityMixin {
                 vertical -= 0.4;
             }
             
-            // Get player's yaw for direction
-            float yaw = player.getYaw();
-            double yawRad = Math.toRadians(yaw);
-            
-            // Calculate forward and sideways direction vectors
-            double forwardX = -Math.sin(yawRad);
-            double forwardZ = Math.cos(yawRad);
-            double sideX = -forwardZ;
-            double sideZ = forwardX;
-            
-            // Calculate movement vector
-            double x = (forward * forwardX + sideways * sideX) * 0.18;
-            double z = (forward * forwardZ + sideways * sideZ) * 0.18;
-            
-            // Create final movement vector
-            Vec3d movement = new Vec3d(x, vertical * 0.18, z);
+            // Use the original input's horizontal components and apply our vertical movement
+            Vec3d movement = new Vec3d(originalInput.x * 0.18, vertical * 0.18, originalInput.z * 0.18);
             
             // Set the return value
             cir.setReturnValue(movement);
