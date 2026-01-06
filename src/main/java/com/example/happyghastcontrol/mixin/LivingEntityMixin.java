@@ -3,7 +3,7 @@ package com.example.happyghastcontrol.mixin;
 import com.example.happyghastcontrol.HappyGhastControlClient;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.option.KeyMapping;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.GhastEntity;
@@ -39,11 +39,11 @@ public abstract class LivingEntityMixin {
                             float forward = 0.0F;
                             float sideways = 0.0F;
                             
-                            // Get key bindings from client options
-                            KeyBinding forwardKey = client.options.forwardKey;
-                            KeyBinding backwardKey = client.options.backKey;
-                            KeyBinding leftKey = client.options.leftKey;
-                            KeyBinding rightKey = client.options.rightKey;
+                            // Get key mappings from client options
+                            KeyMapping forwardKey = client.options.forwardKey;
+                            KeyMapping backwardKey = client.options.backKey;
+                            KeyMapping leftKey = client.options.leftKey;
+                            KeyMapping rightKey = client.options.rightKey;
                             
                             // Calculate horizontal movement input
                             if (forwardKey.isPressed()) {
