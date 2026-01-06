@@ -35,60 +35,51 @@ public abstract class LivingEntityMixin {
                         
                         MinecraftClient client = MinecraftClient.getInstance();
                         if (client.player == player) {
-                            // Handle horizontal movement with WASD/arrow keys
+                            // Calculate movement inputs
                             float forward = 0.0F;
                             float sideways = 0.0F;
-                            
-                            // Get key bindings from client options
-                            KeyBinding forwardKey = client.options.forwardKey;
-                            KeyBinding backwardKey = client.options.backKey;
-                            KeyBinding leftKey = client.options.leftKey;
-                            KeyBinding rightKey = client.options.rightKey;
-                            
-                            // Calculate horizontal movement input
-                            if (forwardKey.isPressed()) {
-                                forward += 1.0F;
-                            }
-                            if (backwardKey.isPressed()) {
-                                forward -= 1.0F;
-                            }
-                            if (leftKey.isPressed()) {
-                                sideways += 1.0F;
-                            }
-                            if (rightKey.isPressed()) {
-                                sideways -= 1.0F;
-                            }
-                            
-                            // Handle vertical movement from custom key bindings
                             double vertical = 0.0;
-                            if (HappyGhastControlClient.ascendKey.isPressed()) {
-                                vertical += 0.4;
-                            }
-                            if (HappyGhastControlClient.descendKey.isPressed()) {
-                                vertical -= 0.4;
-                            }
                             
-                            // Calculate movement direction based on player rotation
+                            // WASD/Arrow keys for horizontal movement
+                            if (client.options.forwardKey.isPressed()) forward += 1.0F;
+                            if (client.options.backKey.isPressed()) forward -= 1.0F;
+                            if (client.options.leftKey.isPressed()) sideways += 1.0F;
+                            if (client.options.rightKey.isPressed()) sideways -= 1.0F;
+                            
+                            // Custom keys for vertical movement
+                            if (HappyGhastControlClient.ascendKey.isPressed()) vertical += 0.4;
+                            if (HappyGhastControlClient.descendKey.isPressed()) vertical -= 0.4;
+                            
+                            // Get player's rotation for direction
                             float yaw = player.getYaw();
                             
                             // Convert yaw to radians
-                            float yawRad = (float) Math.toRadians(yaw);
+                            double yawRad = Math.toRadians(yaw);
                             
-                            // Calculate forward and sideways movement components
-                            double moveX = (-Math.sin(yawRad) * forward + -Math.cos(yawRad) * sideways) * 0.4;
+                            // Calculate movement direction
+                            Vec3d forwardDir = new Vec3d(
+                                -Math.sin(yawRad),
+                                0.0,
+                                Math.cos(yawRad)
+                            ).normalize();
+                            
+                            Vec3d sideDir = new Vec3d(
+                                -forwardDir.z,
+                                0.0,
+                                forwardDir.x
+                            ).normalize();
+                            
+                            // Calculate movement vector components
+                            double moveX = forwardDir.x * forward + sideDir.x * sideways;
                             double moveY = vertical;
-                            double moveZ = (Math.cos(yawRad) * forward + -Math.sin(yawRad) * sideways) * 0.4;
+                            double moveZ = forwardDir.z * forward + sideDir.z * sideways;
                             
-                            // Create movement vector
-                            Vec3d movement = new Vec3d(moveX, moveY, moveZ);
+                            // Create movement vector (no normalize to avoid issues when no input)
+                            Vec3d movement = new Vec3d(moveX, moveY, moveZ).multiply(0.4);
                             
                             // Apply movement to entity
                             entity.setVelocity(movement);
                             entity.velocityModified = true;
-                            
-                            // Manually update entity position based on velocity (since we canceled travel)
-                            Vec3d newPos = entity.getPos().add(movement);
-                            entity.setPos(newPos);
                         }
                     }
                 }
