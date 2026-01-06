@@ -12,30 +12,41 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(GhastEntity.class)
 public abstract class LivingEntityMixin {
 
-    @Inject(method = "getRiddenInput", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getRiddenInput", at = @At("RETURN"), cancellable = true)
     private void modifyHappyGhastRiddenInput(PlayerEntity player, Vec3d originalInput, CallbackInfoReturnable<Vec3d> cir) {
         GhastEntity ghast = (GhastEntity)(Object)this;
         
         // Only modify behavior for happy ghasts (no target)
         if (ghast.getTarget() == null) {
             // Get player movement inputs
-            float forward = player.movementForward;
-            float sideways = player.movementSideways;
+            float forward = player.input.movementForward;
+            float sideways = player.input.movementSideways;
             
             // Handle vertical movement
-            float vertical = 0.0f;
+            double vertical = 0.0;
             if (HappyGhastControlClient.ascendKey.isPressed()) {
-                vertical += 0.5f;
+                vertical += 0.4;
             }
             if (HappyGhastControlClient.descendKey.isPressed()) {
-                vertical -= 0.5f;
+                vertical -= 0.4;
             }
             
-            // Create movement vector
-            Vec3d movement = new Vec3d(sideways, vertical, forward);
+            // Get player's yaw for direction
+            float yaw = player.getYaw();
+            double yawRad = Math.toRadians(yaw);
             
-            // Apply movement scaling (matches reference MOD behavior)
-            movement = movement.multiply(0.18);
+            // Calculate forward and sideways direction vectors
+            double forwardX = -Math.sin(yawRad);
+            double forwardZ = Math.cos(yawRad);
+            double sideX = -forwardZ;
+            double sideZ = forwardX;
+            
+            // Calculate movement vector
+            double x = (forward * forwardX + sideways * sideX) * 0.18;
+            double z = (forward * forwardZ + sideways * sideZ) * 0.18;
+            
+            // Create final movement vector
+            Vec3d movement = new Vec3d(x, vertical * 0.18, z);
             
             // Set the return value
             cir.setReturnValue(movement);
