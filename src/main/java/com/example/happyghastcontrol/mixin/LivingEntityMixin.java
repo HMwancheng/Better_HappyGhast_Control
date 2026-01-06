@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(GhastEntity.class)
 public abstract class LivingEntityMixin {
 
-    @Inject(method = "getRiddenInput", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getRiddenInput(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;", at = @At("RETURN"), cancellable = true)
     private void modifyHappyGhastRiddenInput(PlayerEntity player, Vec3d originalInput, CallbackInfoReturnable<Vec3d> cir) {
         GhastEntity ghast = (GhastEntity)(Object)this;
         
