@@ -2,7 +2,7 @@ package com.example.happyghastcontrol.mixin;
 
 import com.example.happyghastcontrol.HappyGhastControlClient;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -12,78 +12,62 @@ import net.minecraft.util.math.Vec3d;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin {
+@Mixin(GhastEntity.class)
+public abstract class HappyGhastMixin {
 
-    @Inject(method = "travel", at = @At("HEAD"), cancellable = true)
-    private void modifyHappyGhastTravel(Vec3d movementInput, CallbackInfo ci) {
-        LivingEntity entity = (LivingEntity)(Object)this;
+    @Inject(method = "getRiddenInput", at = @At("RETURN"), cancellable = true)
+    private void modifyHappyGhastRiddenInput(PlayerEntity player, Vec3d originalInput, CallbackInfoReturnable<Vec3d> cir) {
+        GhastEntity ghast = (GhastEntity)(Object)this;
         
-        // Check if this entity is a ridden ghast
-        if (entity.getType() == EntityType.GHAST && !entity.getPassengerList().isEmpty()) {
-            for (PlayerEntity passenger : entity.getPassengerList().stream().filter(e -> e instanceof PlayerEntity).map(e -> (PlayerEntity)e).toList()) {
-                if (passenger instanceof ClientPlayerEntity) {
-                    ClientPlayerEntity player = (ClientPlayerEntity)passenger;
-                    
-                    // Check if it's a happy ghast (no target)
-                    GhastEntity ghast = (GhastEntity)entity;
-                    if (ghast.getTarget() == null) {
-                        // Cancel vanilla travel logic for happy ghasts
-                        ci.cancel();
-                        
-                        MinecraftClient client = MinecraftClient.getInstance();
-                        if (client.player == player) {
-                            // Calculate movement inputs
-                            float forward = 0.0F;
-                            float sideways = 0.0F;
-                            double vertical = 0.0;
-                            
-                            // WASD/Arrow keys for horizontal movement
-                            if (client.options.forwardKey.isPressed()) forward += 1.0F;
-                            if (client.options.backKey.isPressed()) forward -= 1.0F;
-                            if (client.options.leftKey.isPressed()) sideways += 1.0F;
-                            if (client.options.rightKey.isPressed()) sideways -= 1.0F;
-                            
-                            // Custom keys for vertical movement
-                            if (HappyGhastControlClient.ascendKey.isPressed()) vertical += 0.4;
-                            if (HappyGhastControlClient.descendKey.isPressed()) vertical -= 0.4;
-                            
-                            // Get player's rotation for direction
-                            float yaw = player.getYaw();
-                            
-                            // Convert yaw to radians
-                            double yawRad = Math.toRadians(yaw);
-                            
-                            // Calculate movement direction
-                            Vec3d forwardDir = new Vec3d(
-                                -Math.sin(yawRad),
-                                0.0,
-                                Math.cos(yawRad)
-                            ).normalize();
-                            
-                            Vec3d sideDir = new Vec3d(
-                                -forwardDir.z,
-                                0.0,
-                                forwardDir.x
-                            ).normalize();
-                            
-                            // Calculate movement vector components
-                            double moveX = forwardDir.x * forward + sideDir.x * sideways;
-                            double moveY = vertical;
-                            double moveZ = forwardDir.z * forward + sideDir.z * sideways;
-                            
-                            // Create movement vector (no normalize to avoid issues when no input)
-                            Vec3d movement = new Vec3d(moveX, moveY, moveZ).multiply(0.4);
-                            
-                            // Apply movement to entity
-                            entity.setVelocity(movement);
-                            entity.velocityModified = true;
-                        }
-                    }
-                }
+        // Only modify behavior for happy ghasts (no target)
+        if (ghast.getTarget() == null) {
+            // Get original input values
+            double originalX = originalInput.x;
+            double originalY = originalInput.y;
+            double originalZ = originalInput.z;
+            
+            // Calculate horizontal movement from player input
+            float forward = 0.0F;
+            float sideways = 0.0F;
+            
+            // Get movement input from player controls
+            if (player instanceof LocalPlayer) {
+                LocalPlayer localPlayer = (LocalPlayer)player;
+                forward = localPlayer.input.movementForward;
+                sideways = localPlayer.input.movementSideways;
             }
+            
+            // Handle vertical movement from custom key bindings
+            double vertical = 0.0;
+            if (HappyGhastControlClient.ascendKey.isPressed()) {
+                vertical += 0.4;
+            }
+            if (HappyGhastControlClient.descendKey.isPressed()) {
+                vertical -= 0.4;
+            }
+            
+            // Get player's yaw for direction
+            float yaw = player.getYaw();
+            double yawRad = Math.toRadians(yaw);
+            
+            // Calculate forward and sideways direction vectors
+            double forwardX = -Math.sin(yawRad);
+            double forwardZ = Math.cos(yawRad);
+            double sideX = -forwardZ;
+            double sideZ = forwardX;
+            
+            // Calculate final movement vector
+            double moveX = (forwardX * forward + sideX * sideways) * 0.4;
+            double moveY = vertical;
+            double moveZ = (forwardZ * forward + sideZ * sideways) * 0.4;
+            
+            // Create movement vector
+            Vec3d movement = new Vec3d(moveX, moveY, moveZ);
+            
+            // Set the return value
+            cir.setReturnValue(movement);
         }
     }
 }
