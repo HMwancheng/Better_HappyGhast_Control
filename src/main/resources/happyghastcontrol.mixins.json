@@ -3,7 +3,7 @@
   "package": "com.example.happyghastcontrol.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "HappyGhastMixin"
+    "LivingEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

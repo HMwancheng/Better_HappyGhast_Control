@@ -1,11 +1,7 @@
 package com.example.happyghastcontrol.mixin;
 
 import com.example.happyghastcontrol.HappyGhastControlClient;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.GhastEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -15,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(GhastEntity.class)
-public abstract class HappyGhastMixin {
+public abstract class LivingEntityMixin {
 
     @Inject(method = "getRiddenInput", at = @At("RETURN"), cancellable = true)
     private void modifyHappyGhastRiddenInput(PlayerEntity player, Vec3d originalInput, CallbackInfoReturnable<Vec3d> cir) {
@@ -29,15 +25,8 @@ public abstract class HappyGhastMixin {
             double originalZ = originalInput.z;
             
             // Calculate horizontal movement from player input
-            float forward = 0.0F;
-            float sideways = 0.0F;
-            
-            // Get movement input from player controls
-            if (player instanceof LocalPlayer) {
-                LocalPlayer localPlayer = (LocalPlayer)player;
-                forward = localPlayer.input.movementForward;
-                sideways = localPlayer.input.movementSideways;
-            }
+            float forward = player.input.movementForward;
+            float sideways = player.input.movementSideways;
             
             // Handle vertical movement from custom key bindings
             double vertical = 0.0;
