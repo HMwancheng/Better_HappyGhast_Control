@@ -27,9 +27,9 @@ public abstract class LivingEntityMixin {
                 if (passenger instanceof ClientPlayerEntity) {
                     ClientPlayerEntity player = (ClientPlayerEntity)passenger;
                     
-                    // Check if it's a happy ghast (not screaming)
+                    // Check if it's a happy ghast (no target)
                     GhastEntity ghast = (GhastEntity)entity;
-                    if (!ghast.isScreaming()) {
+                    if (ghast.getTarget() == null) {
                         // Cancel vanilla travel logic for happy ghasts
                         ci.cancel();
                         
