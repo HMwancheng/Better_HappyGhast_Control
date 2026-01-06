@@ -27,9 +27,9 @@ public abstract class LivingEntityMixin {
                 if (passenger instanceof ClientPlayerEntity) {
                     ClientPlayerEntity player = (ClientPlayerEntity)passenger;
                     
-                    // Check if it's a happy ghast (using the anger level)
+                    // Check if it's a happy ghast (not screaming)
                     GhastEntity ghast = (GhastEntity)entity;
-                    if (ghast.getAngerTime() <= 0) {
+                    if (!ghast.isScreaming()) {
                         // Cancel vanilla travel logic for happy ghasts
                         ci.cancel();
                         
