@@ -23,8 +23,10 @@ jobs:
         distribution: 'adopt'
         cache: gradle
 
+    - name: Install Gradle
+      run: sudo apt-get update && sudo apt-get install -y gradle
     - name: Build with Gradle
-      run: ./gradlew build
+      run: gradle build
 
     - name: Upload built JAR
       uses: actions/upload-artifact@v4
