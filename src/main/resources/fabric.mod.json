@@ -20,11 +20,7 @@
     ]
   },
   "mixins": [
-    "happyghastcontrol.mixins.json",
-    {
-      "config": "happyghastcontrol.client.mixins.json",
-      "environment": "client"
-    }
+    "happyghastcontrol.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.10",

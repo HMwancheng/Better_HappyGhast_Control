@@ -1,6 +1,5 @@
 package com.example.happyghastcontrol.mixin;
 
-import com.example.happyghastcontrol.injector.IPlayerInjector;
 import net.minecraft.entity.mob.GhastEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -29,7 +28,7 @@ public abstract class HappyGhastMixin {
             float strafe = 0.0f;
             float vertical = 0.0f;
             
-            if (player instanceof IPlayerInjector injector && injector.betterHappyGhast$isCtrlDown()) {
+            if (player.isSneaking()) {
                 vertical -= 0.5f;
             }
             
