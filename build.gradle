@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.8.+'
+    id 'fabric-loom' version '1.8.0'
     id 'maven-publish'
 }
 
@@ -10,8 +10,15 @@ base {
     archivesName = project.archives_base_name
 }
 
+pluginManagement {
+    repositories {
+        maven { url = 'https://maven.fabricmc.net/' }
+        gradlePluginPortal()
+    }
+}
+
 repositories {
-    // Add repositories here if needed
+    maven { url = 'https://maven.fabricmc.net/' }
 }
 
 dependencies {
