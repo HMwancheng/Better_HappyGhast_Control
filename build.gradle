@@ -11,7 +11,15 @@ base {
 }
 
 repositories {
-    maven { url = 'https://maven.fabricmc.net/' }
+    maven { url = 'https://maven.fabricmc.net/' } // Fabric官方仓库
+    exclusiveContent {
+        forRepositories {
+            maven { url = 'https://maven.fabricmc.net/' }
+        }
+        filter {
+            includeGroup 'net.fabricmc.fabric-api'
+        }
+    }
 }
 
 dependencies {
