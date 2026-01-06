@@ -45,6 +45,11 @@ java {
     }
 }
 
+// Ensure classes are included in the JAR
+jar {
+    from sourceSets.main.output
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
