@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "camelcontrol",
+  "version": "${version}",
+  "name": "Camel Control Mod",
+  "description": "修改快乐恶魂骑乘操作模式为WASD水平移动+空格上升+Ctrl下降",
+  "authors": [
+    "Your Name"
+  ],
+  "contact": {
+    "homepage": "https://github.com/yourname/camelcontrol",
+    "sources": "https://github.com/yourname/camelcontrol"
+  },
+  "license": "MIT",
+  "icon": "assets/camelcontrol/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.camelcontrol.mod.CamelControlMod"
+    ]
+  },
+  "mixins": [
+    "camelcontrol.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "minecraft": ">=1.21.6",
+    "java": ">=21",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
