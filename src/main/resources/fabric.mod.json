@@ -1,0 +1,34 @@
+{
+	"schemaVersion": 1,
+	"id": "happyghast_control",
+	"version": "${version}",
+	"name": "Happy Ghast Control",
+	"description": "Modifies Happy Ghast riding controls for better flight control",
+	"authors": [
+		"HM_wancheng"
+	],
+	"contact": {
+		"homepage": "https://github.com/YourUsername/Better_HappyGhast_Control",
+		"sources": "https://github.com/YourUsername/Better_HappyGhast_Control"
+	},
+	"license": "MIT",
+	"icon": "assets/happyghast_control/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"client": [
+			"com.happyghast.control.HappyGhastControlMod"
+		]
+	},
+	"mixins": [
+		"happyghast_control.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=${loader_version}",
+		"minecraft": "~${minecraft_version}",
+		"java": ">=21",
+		"fabric-api": "*"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}

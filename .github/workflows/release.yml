@@ -1,0 +1,61 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up JDK 21
+      uses: actions/setup-java@v4
+      with:
+        java-version: '21'
+        distribution: 'temurin'
+        
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+      
+    - name: Build with Gradle
+      run: ./gradlew build
+      
+    - name: Get version from tag
+      id: get_version
+      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+      
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: build/libs/*.jar
+        body: |
+          # Happy Ghast Control Mod v${{ steps.get_version.outputs.VERSION }}
+          
+          ## Features
+          - Custom riding controls for Happy Ghasts
+          - WASD for horizontal movement
+          - Space for ascending, Ctrl for descending
+          - Configurable keybindings
+          
+          ## Installation
+          1. Install Fabric Loader for Minecraft 1.21.4+
+          2. Download and install Fabric API
+          3. Place this mod JAR in your mods folder
+          4. Launch the game and enjoy!
+          
+          ## Compatibility
+          - Minecraft: 1.21.4+
+          - Fabric Loader: 0.16.11+
+          - Fabric API: Required
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
