@@ -1,6 +1,6 @@
 package com.happyghast.control.mixin;
 
-import com.happyghast.control.HappyGhastControlMod;
+import com.happyghast.control.HappyGhastControlClient;
 import com.happyghast.control.config.ModConfig;
 import com.happyghast.control.util.EntityTypeChecker;
 import net.minecraft.client.MinecraftClient;
@@ -74,11 +74,11 @@ public abstract class LivingEntityMixin {
 		double moveY = 0;
 		if (ModConfig.isVerticalControlEnabled()) {
 			// Check if ascend key is pressed (Space)
-			if (HappyGhastControlMod.ascendKey.isPressed()) {
+			if (HappyGhastControlClient.ascendKey.isPressed()) {
 				moveY = speedMultiplier * 0.8;
 			}
 			// Check if descend key is pressed (Ctrl)
-			else if (HappyGhastControlMod.descendKey.isPressed()) {
+			else if (HappyGhastControlClient.descendKey.isPressed()) {
 				moveY = -speedMultiplier * 0.8;
 			}
 		}

@@ -15,12 +15,19 @@
 	"icon": "assets/happyghast_control/icon.png",
 	"environment": "*",
 	"entrypoints": {
-		"client": [
+		"main": [
 			"com.happyghast.control.HappyGhastControlMod"
+		],
+		"client": [
+			"com.happyghast.control.HappyGhastControlClient"
 		]
 	},
 	"mixins": [
-		"happyghast_control.mixins.json"
+		"happyghast_control.mixins.json",
+		{
+			"config": "happyghast_control.client.mixins.json",
+			"environment": "client"
+		}
 	],
 	"depends": {
 		"fabricloader": ">=${loader_version}",
