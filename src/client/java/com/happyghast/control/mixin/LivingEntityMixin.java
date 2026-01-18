@@ -1,65 +1,13 @@
-package com.happyghast.control.mixin;
+import net.minecraft.client.network.ClientPlayerEntity;
 
-import com.happyghast.control.HappyGhastControlClient;
-import com.happyghast.control.config.ModConfig;
-import com.happyghast.control.util.EntityTypeChecker;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+// ... (in applyCustomMovement)
+		if (!(player instanceof ClientPlayerEntity clientPlayer)) {
+			return;
+		}
 
-@Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin {
-	
-	/**
-	 * Inject into the travel method to modify movement behavior for Happy Ghasts
-	 * This method is called every tick to update entity movement
-	 */
-	@Inject(method = "travel", at = @At("HEAD"), cancellable = true)
-	private void onTravel(Vec3d movementInput, CallbackInfo ci) {
-		LivingEntity entity = (LivingEntity) (Object) this;
-		
-		// Only process if this entity is being ridden
-		if (!entity.hasPassengers()) {
-			return;
-		}
-		
-		// Check if the first passenger is a player
-		Entity firstPassenger = entity.getFirstPassenger();
-		if (!(firstPassenger instanceof PlayerEntity player)) {
-			return;
-		}
-		
-		// Check if this is a Happy Ghast
-		if (!EntityTypeChecker.isHappyGhast(entity)) {
-			return;
-		}
-		
-		// Only process on client side for the local player
-		MinecraftClient client = MinecraftClient.getInstance();
-		if (client.player == null || !client.player.equals(player)) {
-			return;
-		}
-		
-		// Apply custom movement logic
-		applyCustomMovement(entity, player, movementInput);
-		
-		// Cancel the original travel method since we're handling it
-		ci.cancel();
-	}
-	
-	/**
-	 * Apply custom movement logic for Happy Ghast riding
-	 */
-	private void applyCustomMovement(LivingEntity ghast, PlayerEntity player, Vec3d movementInput) {
 		// Get movement inputs from player
-		float forward = player.input.movementForward;
-		float strafe = player.input.movementSideways;
+		float forward = clientPlayer.input.movementForward;
+		float strafe = clientPlayer.input.movementSideways;
 		
 		// Calculate horizontal movement based on player's view direction
 		float yaw = player.getYaw();
