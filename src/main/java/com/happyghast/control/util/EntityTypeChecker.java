@@ -2,6 +2,7 @@ package com.happyghast.control.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 
 public class EntityTypeChecker {
@@ -21,7 +22,7 @@ public class EntityTypeChecker {
 		// For version compatibility, we check multiple indicators
 		
 		// Get the entity type identifier
-		Identifier entityId = EntityType.getId(entity.getType());
+		Identifier entityId = Registries.ENTITY_TYPE.getId(entity.getType());
 		if (entityId == null) {
 			return false;
 		}
