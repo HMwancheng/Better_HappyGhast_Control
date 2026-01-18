@@ -25,77 +25,85 @@ public abstract class LivingEntityMixin extends Entity {
     private void applyCustomMovement(Vec3d input, CallbackInfo ci) {
         LivingEntity ghast = (LivingEntity) (Object) this;
         
-        // Only run for Happy Ghasts
-        // Using string check to avoid dependency on the entity type class if it's not easily accessible,
-        // or assuming "happy_ghast" id.
-        // Better: Check registry key or cast if we had the class. 
-        // For now, let's assume if it has passengers and is a Ghast-like entity.
-        // But the user said "Happy Ghast". Let's check registry key if possible, or just proceed if we are "this".
-        // Actually, the mixin is on LivingEntity, so "this" is the entity.
+        // 1. Check for player passengers (Happy Ghast supports multiple, we find the first player)
+        PlayerEntity player = null;
+        for (Entity passenger : ghast.getPassengerList()) {
+            if (passenger instanceof PlayerEntity) {
+                player = (PlayerEntity) passenger;
+                break;
+            }
+        }
         
-        if (!ghast.hasPassengers() || !(ghast.getFirstPassenger() instanceof PlayerEntity player)) {
+        if (player == null) {
             return;
         }
 
-        // Check if this is a Happy Ghast (by checking registry key string to be safe/generic)
+        // 2. Identification check for Happy Ghast
         String entityId = net.minecraft.registry.Registries.ENTITY_TYPE.getId(ghast.getType()).toString();
-        if (!entityId.equals("minecraft:happy_ghast") && !entityId.contains("happy_ghast")) {
+        
+        // Very broad check to ensure we hit it even if names vary in snapshots
+        boolean isHappyGhast = entityId.contains("happy") && entityId.contains("ghast");
+        
+        if (!isHappyGhast) {
             return;
         }
 
+        // 3. Ensure we are on the client and the player is the local player
         if (!(player instanceof ClientPlayerEntity clientPlayer)) {
             return;
         }
 
-        // Get movement inputs from player (using GameOptions to avoid Input class mapping mismatches)
         net.minecraft.client.MinecraftClient client = net.minecraft.client.MinecraftClient.getInstance();
+        if (clientPlayer != client.player) {
+            return;
+        }
+
+        // Get movement inputs from game options (more reliable than input class)
         boolean pressingForward = client.options.forwardKey.isPressed();
         boolean pressingBack = client.options.backKey.isPressed();
         boolean pressingLeft = client.options.leftKey.isPressed();
         boolean pressingRight = client.options.rightKey.isPressed();
 
-		float forward = (pressingForward ? 1.0f : 0.0f) - (pressingBack ? 1.0f : 0.0f);
-		float strafe = (pressingLeft ? 1.0f : 0.0f) - (pressingRight ? 1.0f : 0.0f);
+		float forwardInput = (pressingForward ? 1.0f : 0.0f) - (pressingBack ? 1.0f : 0.0f);
+		float strafeInput = (pressingLeft ? 1.0f : 0.0f) - (pressingRight ? 1.0f : 0.0f);
         
-        // Calculate horizontal movement based on player's view direction
+        // Horizontal Movement Math
         float yaw = player.getYaw();
         float speedMultiplier = 0.5f * (float) ModConfig.getMovementMultiplier();
+        double rad = Math.toRadians(yaw);
         
-        // Convert player input to movement vector in world space
-        // Only affect horizontal movement (X and Z), not vertical
-        double moveX = (strafe * Math.cos(Math.toRadians(yaw)) + forward * Math.sin(Math.toRadians(yaw))) * speedMultiplier;
-        double moveZ = (strafe * Math.sin(Math.toRadians(yaw)) - forward * Math.cos(Math.toRadians(yaw))) * speedMultiplier;
+        // Corrected WASD to World-Space Vector translation
+        // Minecraft 0 South, 90 West, 180 North, 270 East
+        double moveX = (-strafeInput * Math.cos(rad) + forwardInput * Math.sin(-rad)) * speedMultiplier;
+        double moveZ = (strafeInput * Math.sin(rad) + forwardInput * Math.cos(rad)) * speedMultiplier;
         
-        // Handle vertical movement
+        // Vertical Movement
         double moveY = 0;
         if (ModConfig.isVerticalControlEnabled()) {
-            // Check if ascend key is pressed (Space)
             if (HappyGhastControlClient.ascendKey.isPressed()) {
                 moveY = speedMultiplier * 0.8;
-            }
-            // Check if descend key is pressed (Ctrl)
-            else if (HappyGhastControlClient.descendKey.isPressed()) {
+            } else if (HappyGhastControlClient.descendKey.isPressed()) {
                 moveY = -speedMultiplier * 0.8;
             }
         }
         
-        // Apply the calculated velocity to the ghast
-        Vec3d velocity = new Vec3d(moveX, moveY, moveZ);
-        ghast.setVelocity(velocity);
+        // Apply velocity directly
+        ghast.setVelocity(moveX, moveY, moveZ);
         
-        // Update ghast rotation to match player's view
+        // Sync rotation to player's view
         ghast.setYaw(player.getYaw());
         ghast.setPitch(player.getPitch() * 0.5f);
         ghast.bodyYaw = ghast.getYaw();
         ghast.headYaw = ghast.getYaw();
         
-        // Apply movement
+        // Replicate critical parts of LivingEntity.travel()
+        // We Use MovementType.PLAYER because it's player-driven movement
         ghast.move(net.minecraft.entity.MovementType.SELF, ghast.getVelocity());
         
-        // Apply air resistance (drag)
-        ghast.setVelocity(ghast.getVelocity().multiply(0.95, 0.95, 0.95));
+        // Friction/Drag application (same as creative mode flight/ghast roaming)
+        ghast.setVelocity(ghast.getVelocity().multiply(0.95));
         
-        // Cancel vanilla travel logic
+        // Cancel vanilla logic to prevent "move where looking" behavior
         ci.cancel();
     }
 }
