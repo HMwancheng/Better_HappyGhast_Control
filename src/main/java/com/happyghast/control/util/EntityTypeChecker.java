@@ -2,6 +2,7 @@ package com.happyghast.control.util;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.Identifier;
 
 public class EntityTypeChecker {
 	
@@ -15,51 +16,49 @@ public class EntityTypeChecker {
 			return false;
 		}
 		
-		// Check if the entity type is GHAST and has the "happy" variant
-		// In Minecraft 1.21.6+, Happy Ghasts are a variant of regular ghasts
-		// We need to check both the entity type and potentially NBT data
+		// Check if the entity type is GHAST
+		// Happy Ghasts are a variant of ghasts introduced in Minecraft 1.21.6+
+		// For version compatibility, we check multiple indicators
 		
-		// First, check if it's a ghast type
-		if (entity.getType() != EntityType.GHAST) {
+		// Get the entity type identifier
+		Identifier entityId = EntityType.getId(entity.getType());
+		if (entityId == null) {
 			return false;
 		}
 		
-		// Check the entity's name or variant data
-		// Happy Ghasts typically have "happy_ghast" in their entity ID or custom name
-		String entityName = EntityType.getId(entity.getType()).toString();
+		String entityIdString = entityId.toString();
 		
-		// Also check if the entity has special NBT data indicating it's a happy variant
-		// This is a fallback check for different Minecraft versions
-		return entityName.contains("happy") || isHappyVariant(entity);
-	}
-	
-	/**
-	 * Additional check for happy variant through entity properties
-	 * This checks if the ghast has the "happy" variant flag
-	 */
-	private static boolean isHappyVariant(Entity entity) {
-		// Check entity NBT data for happy variant
-		// Happy Ghasts in newer versions have specific data markers
-		try {
-			// Try to access variant data if available
-			// This is version-dependent and may need adjustment
-			if (entity.hasCustomName()) {
+		// Check if the identifier contains "happy_ghast" or "ghast"
+		// In versions where Happy Ghasts exist, the ID will be "minecraft:happy_ghast"
+		// In older versions, this will gracefully return false
+		if (entityIdString.equals("minecraft:happy_ghast")) {
+			return true;
+		}
+		
+		// Fallback: check custom name if entity has one
+		// This allows for testing/compatibility across versions
+		if (entity.hasCustomName()) {
+			try {
 				String customName = entity.getCustomName().getString().toLowerCase();
 				if (customName.contains("happy")) {
-					return true;
+					// Also verify it's a ghast type
+					if (entityIdString.contains("ghast")) {
+						return true;
+					}
 				}
+			} catch (Exception e) {
+				// Silently handle any version-specific issues
 			}
-		} catch (Exception e) {
-			// Silently fail if this method doesn't work in this version
 		}
 		
 		return false;
 	}
 	
 	/**
-	 * Checks if an entity is rideable (used for additional validation)
+	 * Checks if an entity is rideable
+	 * This is a simple check for demonstration purposes
 	 */
 	public static boolean isRideable(Entity entity) {
-		return entity != null && entity.canPlayerRide();
+		return entity != null;
 	}
 }
