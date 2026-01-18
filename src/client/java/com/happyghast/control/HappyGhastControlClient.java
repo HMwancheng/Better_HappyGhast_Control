@@ -28,12 +28,14 @@ public class HappyGhastControlClient implements ClientModInitializer {
 		// Register keybindings
 		ascendKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 			"key.happyghast_control.ascend",
+			InputUtil.Type.KEYSYM,
 			GLFW.GLFW_KEY_SPACE,
 			"category.happyghast_control.controls"
 		));
 
 		descendKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 			"key.happyghast_control.descend",
+			InputUtil.Type.KEYSYM,
 			GLFW.GLFW_KEY_LEFT_CONTROL,
 			"category.happyghast_control.controls"
 		));
