@@ -47,9 +47,15 @@ public abstract class LivingEntityMixin extends Entity {
             return;
         }
 
-        // Get movement inputs from player
-        float forward = clientPlayer.input.movementForward;
-        float strafe = clientPlayer.input.movementSideways;
+        // Get movement inputs from player (using GameOptions to avoid Input class mapping mismatches)
+        net.minecraft.client.MinecraftClient client = net.minecraft.client.MinecraftClient.getInstance();
+        boolean pressingForward = client.options.forwardKey.isPressed();
+        boolean pressingBack = client.options.backKey.isPressed();
+        boolean pressingLeft = client.options.leftKey.isPressed();
+        boolean pressingRight = client.options.rightKey.isPressed();
+
+		float forward = (pressingForward ? 1.0f : 0.0f) - (pressingBack ? 1.0f : 0.0f);
+		float strafe = (pressingLeft ? 1.0f : 0.0f) - (pressingRight ? 1.0f : 0.0f);
         
         // Calculate horizontal movement based on player's view direction
         float yaw = player.getYaw();

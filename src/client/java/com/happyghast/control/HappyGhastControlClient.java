@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,18 +27,23 @@ public class HappyGhastControlClient implements ClientModInitializer {
 		ModConfig.load();
 
 		// Register keybindings
+		
+		// Create category object (required for 1.21 KeyBinding constructor)
+		// 1.21.x requires an Identifier for Category creation.
+		KeyBinding.Category categoryObj = KeyBinding.Category.create(Identifier.of(MOD_ID, "controls"));
+		
 		ascendKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 			"key.happyghast_control.ascend",
 			InputUtil.Type.KEYSYM,
 			GLFW.GLFW_KEY_SPACE,
-			"category.happyghast_control.controls"
+			categoryObj
 		));
 
 		descendKey = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 			"key.happyghast_control.descend",
 			InputUtil.Type.KEYSYM,
 			GLFW.GLFW_KEY_LEFT_CONTROL,
-			"category.happyghast_control.controls"
+			categoryObj
 		));
 
 		LOGGER.info("Happy Ghast Control Client initialized successfully");
